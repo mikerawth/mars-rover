@@ -15,6 +15,8 @@ var boundary = createBoundary(xBoundary,yBoundary);
 updatedPosition(roverPosition());
 
 // ======================
+
+// Turns rover left
 function turnLeft(){
   switch(rover.direction) {
     case "N":
@@ -30,9 +32,10 @@ function turnLeft(){
         rover.direction = "N";
         break;                 
   }
-  return console.log(`Now facing: ${rover.direction}`);
+  return console.log(`Rover has turned left.  Now facing: ${rover.direction}`);
 }
 
+// Turns rover right
 function turnRight(){
   switch(rover.direction) {
     case "N":
@@ -48,9 +51,12 @@ function turnRight(){
       rover.direction = "N";
       break;                 
   }
-  return console.log(`Now facing: ${rover.direction}`);
+  return console.log(`Rover has turned right.  Now facing: ${rover.direction}`);
 }
 
+
+// Rover moves forward
+// preventCrash() is called with this function before move is initiated.
 function moveForward(){
   if (preventCrash() == true) {
     removePreviousPosition(roverPosition());
@@ -70,10 +76,12 @@ function moveForward(){
         break;
     }
     updatedPosition(roverPosition());
-    return console.log(`Heading ${rover.direction}, now at position ${roverPosition()}`);
+    return console.log(`Rover moving forward, heading ${rover.direction}. Now at position ${roverPosition()}`);
   }
 }
 
+// Rover moves backwards
+// preventBackCrash() is called with this function before move is initiated.
 function moveBackward(){
   if (preventBackCrash() == true) {
     removePreviousPosition(roverPosition());
@@ -97,11 +105,10 @@ function moveBackward(){
   }
 }
 
+// commandLine accepts a string, using each letter as a command.
+// "f", "b", "l", and "r" will call other rover functions respectivly.
 function commandLine(commands) {
-  // console.log("function has been called");
   for(let i = 0; i < commands.length; i++) {
-    // console.log("loop has been called");
-    // console.log(`Currently at ${commands.charAt(i)}`);
     switch(commands.charAt(i)) {
       case "f":
         moveForward();
@@ -123,6 +130,14 @@ function commandLine(commands) {
   return rover.travelLog;
 }
 
+// Returns rover cordinates
+function roverPosition() {
+  return [rover.x, rover.y];
+}
+
+// Creates boundary using xBoundary & yBoundary.
+  // NOTE: Unsure why I had to set 1st for loop using y-axis, and 2nd loop using x-axis.
+  // createBoundary function works as intended, but will need to code review.
 function createBoundary(x,y) {
   var matrix = [];
   for (let i = 0; i < y; i++) {
@@ -134,15 +149,20 @@ function createBoundary(x,y) {
   return matrix;
 }
 
+
+// function updates position in Boundary.
 function updatedPosition(location) {
   boundary[location[1]][location[0]] = "R";
 }
 
+// function removes previous position in Boundary.
 function removePreviousPosition(location) {
   boundary[location[1]][location[0]] = null;
 }
 
+// Rover checks spot ahead, makes sure it is in boundary
 function preventCrash() {
+  // Getting 'predicted' coordinates if Rover moves forward.
   var predictRoverX = rover.x;
   var predictRoverY = rover.y;
   switch(rover.direction) {
@@ -157,10 +177,14 @@ function preventCrash() {
       break;
     case "W":
       predictRoverX--;
-      console.log(predictRoverX);
       break;
-    }
+  }
+  // Now have the predictedLocatoin of Rover
   var predictedLocation = boundary[predictRoverX, predictRoverY];
+  // Any spot that is 'undefined' works with y-axis in regards to Boundary.
+  // 'undefinded' did not work with xBoundary.  Instead, a predicted move would create a new key in the x-axis.
+    // Thus, I had to get the xBoundary to limit movement, as well as make sure it doesn't go negative.
+    // I would to only use 'undefined' for this portion.  Need CODE REVIEW.
   if (predictedLocation === undefined || predictRoverX < 0 || predictRoverX >= xBoundary) {
     console.log(`Out of bounds.  Movement aborted`);
     return false;
@@ -170,6 +194,8 @@ function preventCrash() {
   }
 }
 
+// Rover checks spot behind, makes sure it is in boundary.
+// Same as preventCrash(), but directions are reversed.
 function preventBackCrash() {
   var predictRoverX = rover.x;
   var predictRoverY = rover.y;
@@ -185,7 +211,6 @@ function preventBackCrash() {
       break;
     case "W":
       predictRoverX++;
-      console.log(predictRoverX);
       break;
     }
   var predictedLocation = boundary[predictRoverX, predictRoverY];
@@ -196,8 +221,4 @@ function preventBackCrash() {
     console.log(`In bounds.  Move out!`);
     return true;
   }
-}
-
-function roverPosition() {
-  return [rover.x, rover.y];
 }
