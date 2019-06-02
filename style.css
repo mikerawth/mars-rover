@@ -1,0 +1,17 @@
+#grid {
+  display: grid;
+  grid-gap: 10px 10px;
+  margin: 25px;
+  justify-content: center;
+  
+}
+
+.grid-item {
+  border: 1px solid black;
+  background-color: lightcoral;
+  width: 25px;
+  height: 25px;
+  text-align: center;
+  
+
+}

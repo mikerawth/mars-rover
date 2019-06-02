@@ -8,8 +8,8 @@ var rover = {
   travelLog: []
 };
 
-var xBoundary = 10;
-var yBoundary = 10;
+var xBoundary = 3;
+var yBoundary = 3;
 
 const boundary = createBoundary(xBoundary,yBoundary);
 updatedPosition(roverPosition());
@@ -74,6 +74,7 @@ function moveForward(){
         rover.x--;
         break;
     }
+    displayBoundary();
     updatedPosition(roverPosition());
     return console.log(`Rover moving forward, heading ${rover.direction}. Now at position ${roverPosition()}`);
   }
@@ -129,6 +130,7 @@ function commandLine(commands) {
         break;
     }
   }
+  displayBoundary();
   rover.travelLog.push(roverPosition());
   return rover.travelLog;
 }
@@ -150,7 +152,7 @@ function updatedPosition(location) {
 
 // function removes previous position in Boundary.
 function removePreviousPosition(location) {
-  boundary[location[1]][location[0]] = null;
+  boundary[location[1]][location[0]] = "X";
 }
 
 // Rover checks spot ahead, makes sure it is in boundary
@@ -173,7 +175,7 @@ function preventCrash() {
       break;
   }
   // Now have the predictedLocatoin of Rover
-  var predictedLocation = boundary[predictRoverX, predictRoverY];
+  // var predictedLocation = boundary[predictRoverX, predictRoverY];
   // Any spot that is 'undefined' works with y-axis in regards to Boundary.
   if (predictRoverX < 0 || predictRoverX >= xBoundary 
     || predictRoverY < 0 || predictRoverY >= yBoundary) {
@@ -204,7 +206,7 @@ function preventBackCrash() {
       predictRoverX++;
       break;
     }
-  var predictedLocation = boundary[predictRoverX, predictRoverY];
+  // var predictedLocation = boundary[predictRoverX, predictRoverY];
   if (predictRoverX < 0 || predictRoverX >= xBoundary 
       || predictRoverY < 0 || predictRoverY >= yBoundary) {
     console.log(`Out of bounds.  Movement aborted`);
@@ -224,17 +226,44 @@ function preventBackCrash() {
       matrix[i] = [];
       // console.log(`creating ${i}`);
       for (let j = 0; j < x; j++) {
-        matrix[i][j] = null;
+        matrix[i][j] = "_";
         // console.log(`DEBUG: creating ${[i,j]}`);
 
       }
     }
     return matrix;
   }
+function formBoundary() {
+  grid = document.querySelector("#grid");
+  autoString = "";
+  autoCount = 0;
+  while(autoCount < xBoundary) {
+    autoString += "auto ";
+    autoCount++;
+  }
+  grid.style.gridTemplateColumns = autoString;
+  // grid.style.display = "grid";
+  // grid.style.gridGap = "10px 10px";
+  // grid.style.margin = "25px";
+  // grid.style.justifyContent = "center";
+}
+
+// displays Boundary on HTML page
+function displayBoundary() {
+  for(let i = 0; i < yBoundary; i++) {
+    for(let j=0; j < xBoundary; j++) {
+      document.write(`<div class="grid-item">${boundary[i][j]}</div>`);
+    }
+  }
+}
+
+
+
+  
 
 // DEBUGING FUNCTIONS
 
-function gridLength(matrix) {
+function gridLength() {
   console.log(`xBoundary is ${xBoundary}, and x-axis length is ${boundary[0].length}`);
   console.log(`yBoundary is ${yBoundary}, and y-axis length is ${boundary.length}`);
 }
