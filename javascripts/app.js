@@ -8,8 +8,8 @@ var rover = {
   travelLog: []
 };
 
-var xBoundary = 5;
-var yBoundary = 5;
+var xBoundary = 10;
+var yBoundary = 10;
 
 const boundary = createBoundary(xBoundary,yBoundary);
 updatedPosition(roverPosition());
@@ -108,19 +108,24 @@ function moveBackward(){
 function commandLine(commands) {
   for(let i = 0; i < commands.length; i++) {
     switch(commands.charAt(i)) {
+      case "F":
       case "f":
         moveForward();
         break;
       case "b":
+      case "B":
         moveBackward();
         break;
       case "r":
+      case "R":
         turnRight();
         break;
       case "l":
+      case "L":
         turnLeft();
         break;
       default:
+        console.log(`${commands.charAt(i)} is not a valid command`)
         break;
     }
   }
@@ -132,21 +137,6 @@ function commandLine(commands) {
 function roverPosition() {
   return [rover.x, rover.y];
 }
-
-// Creates boundary using xBoundary & yBoundary.
-  // NOTE: Unsure why I had to set 1st for loop using y-axis, and 2nd loop using x-axis.
-  // createBoundary function works as intended, but will need to code review.
-function createBoundary(x,y) {
-  var matrix = [];
-  for (let i = 0; i < y; i++) {
-    matrix[i] = [];
-    for (let j = 0; j < x; j++) {
-      matrix[i][j] = null;
-    }
-  }
-  return matrix;
-}
-
 
 // function updates position in Boundary.
 // location is an array with length of 2
@@ -185,10 +175,8 @@ function preventCrash() {
   // Now have the predictedLocatoin of Rover
   var predictedLocation = boundary[predictRoverX, predictRoverY];
   // Any spot that is 'undefined' works with y-axis in regards to Boundary.
-  // 'undefinded' did not work with xBoundary.  Instead, a predicted move would create a new key in the x-axis.
-    // Thus, I had to get the xBoundary to limit movement, as well as make sure it doesn't go negative.
-    // I would to only use 'undefined' for this portion.  Need CODE REVIEW.
-  if (predictedLocation === undefined || predictRoverX < 0 || predictRoverX >= xBoundary) {
+  if (predictRoverX < 0 || predictRoverX >= xBoundary 
+    || predictRoverY < 0 || predictRoverY >= yBoundary) {
     console.log(`Out of bounds.  Movement aborted`);
     return false;
   } else {
@@ -225,4 +213,28 @@ function preventBackCrash() {
     console.log(`In bounds.  Move out!`);
     return true;
   }
+}
+
+// Creates boundary using xBoundary & yBoundary.
+  // NOTE: Unsure why I had to set 1st for loop using y-axis, and 2nd loop using x-axis.
+  // createBoundary function works as intended, but will need to code review.
+  function createBoundary(x,y) {
+    var matrix = [];
+    for (let i = 0; i < y; i++) {
+      matrix[i] = [];
+      // console.log(`creating ${i}`);
+      for (let j = 0; j < x; j++) {
+        matrix[i][j] = null;
+        // console.log(`DEBUG: creating ${[i,j]}`);
+
+      }
+    }
+    return matrix;
+  }
+
+// DEBUGING FUNCTIONS
+
+function gridLength(matrix) {
+  console.log(`xBoundary is ${xBoundary}, and x-axis length is ${boundary[0].length}`);
+  console.log(`yBoundary is ${yBoundary}, and y-axis length is ${boundary.length}`);
 }
