@@ -11,7 +11,7 @@ var rover = {
 var xBoundary = 5;
 var yBoundary = 5;
 
-var boundary = createBoundary(xBoundary,yBoundary);
+const boundary = createBoundary(xBoundary,yBoundary);
 updatedPosition(roverPosition());
 
 // ======================
@@ -60,7 +60,6 @@ function turnRight(){
 function moveForward(){
   if (preventCrash() == true) {
     removePreviousPosition(roverPosition());
-    rover.travelLog.push(roverPosition());
     switch(rover.direction) {
       case "N":
         rover.y--;
@@ -85,7 +84,6 @@ function moveForward(){
 function moveBackward(){
   if (preventBackCrash() == true) {
     removePreviousPosition(roverPosition());
-    rover.travelLog.push(roverPosition());
     switch(rover.direction) {
       case "N":
         rover.y++;
@@ -151,8 +149,13 @@ function createBoundary(x,y) {
 
 
 // function updates position in Boundary.
+// location is an array with length of 2
 function updatedPosition(location) {
+  // location[1] is y-axis
+  // lcoation[0] is x-axis
+  // due to method of boundary created, boundary reads y-axis first, and x-axis second.
   boundary[location[1]][location[0]] = "R";
+  rover.travelLog.push(roverPosition());
 }
 
 // function removes previous position in Boundary.
@@ -214,7 +217,8 @@ function preventBackCrash() {
       break;
     }
   var predictedLocation = boundary[predictRoverX, predictRoverY];
-  if (predictedLocation === undefined || predictRoverX < 0 || predictRoverX >= xBoundary) {
+  if (predictRoverX < 0 || predictRoverX >= xBoundary 
+      || predictRoverY < 0 || predictRoverY >= yBoundary) {
     console.log(`Out of bounds.  Movement aborted`);
     return false;
   } else {
