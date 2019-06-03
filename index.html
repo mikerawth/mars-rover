@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <title>Mars Rover</title>
-  <script src="javascripts/app.js"></script>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -25,11 +24,9 @@
     <li>Once you move, you can type <i>boundary</i> again to see where the rover is</li>
   </ol>
 
-  <div id="grid">
-    <script>
-      formBoundary();
-      displayBoundary();
-    </script>
-  </div>
+  <div id="grid"></div>
+
+  <!-- Scripts at end of document ensure DOM is ready -->
+  <script src="javascripts/app.js"></script>
 </body>
 </html>

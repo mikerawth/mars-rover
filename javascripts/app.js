@@ -13,6 +13,7 @@ var yBoundary = 3;
 
 const boundary = createBoundary(xBoundary,yBoundary);
 updatedPosition(roverPosition());
+formBoundary();
 
 // ======================
 
@@ -107,21 +108,17 @@ function moveBackward(){
 // "f", "b", "l", and "r" will call other rover functions respectivly.
 function commandLine(commands) {
   for(let i = 0; i < commands.length; i++) {
-    switch(commands.charAt(i)) {
-      case "F":
+    switch(commands.charAt(i).toLowerCase()) {
       case "f":
         moveForward();
         break;
       case "b":
-      case "B":
         moveBackward();
         break;
       case "r":
-      case "R":
         turnRight();
         break;
       case "l":
-      case "L":
         turnLeft();
         break;
       default:
@@ -129,9 +126,6 @@ function commandLine(commands) {
         break;
     }
   }
-  formBoundary();
-  displayBoundary();
-  rover.travelLog.push(roverPosition());
   return rover.travelLog;
 }
 
@@ -148,6 +142,7 @@ function updatedPosition(location) {
   // due to method of boundary created, boundary reads y-axis first, and x-axis second.
   boundary[location[1]][location[0]] = "R";
   rover.travelLog.push(roverPosition());
+  displayBoundary();
 }
 
 // function removes previous position in Boundary.
@@ -246,23 +241,20 @@ function formBoundary() {
   grid.style.gridGap = "10px 10px";
   grid.style.margin = "25px";
   grid.style.justifyContent = "center";
+  displayBoundary();
 }
 
 // displays Boundary on HTML page
 function displayBoundary() {
+  grid.innerHTML = "";
   for(let i = 0; i < yBoundary; i++) {
     for(let j=0; j < xBoundary; j++) {
-      document.write(`<div class="grid-item">${boundary[i][j]}</div>`);
+      grid.innerHTML += `<div class="grid-item">${boundary[i][j]}</div>`;
     }
   }
 }
 
-
-
-  
-
 // DEBUGING FUNCTIONS
-
 function gridLength() {
   console.log(`xBoundary is ${xBoundary}, and x-axis length is ${boundary[0].length}`);
   console.log(`yBoundary is ${yBoundary}, and y-axis length is ${boundary.length}`);
