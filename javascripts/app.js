@@ -8,8 +8,8 @@ var rover = {
   travelLog: []
 };
 
-var xBoundary = 3;
-var yBoundary = 3;
+var xBoundary = 10;
+var yBoundary = 10;
 
 const boundary = createBoundary(xBoundary,yBoundary);
 updatedPosition(roverPosition());
