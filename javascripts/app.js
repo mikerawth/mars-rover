@@ -74,7 +74,6 @@ function moveForward(){
         rover.x--;
         break;
     }
-    displayBoundary();
     updatedPosition(roverPosition());
     return console.log(`Rover moving forward, heading ${rover.direction}. Now at position ${roverPosition()}`);
   }
@@ -130,6 +129,7 @@ function commandLine(commands) {
         break;
     }
   }
+  formBoundary();
   displayBoundary();
   rover.travelLog.push(roverPosition());
   return rover.travelLog;
@@ -152,7 +152,7 @@ function updatedPosition(location) {
 
 // function removes previous position in Boundary.
 function removePreviousPosition(location) {
-  boundary[location[1]][location[0]] = "X";
+  boundary[location[1]][location[0]] = "_";
 }
 
 // Rover checks spot ahead, makes sure it is in boundary
@@ -242,10 +242,10 @@ function formBoundary() {
     autoCount++;
   }
   grid.style.gridTemplateColumns = autoString;
-  // grid.style.display = "grid";
-  // grid.style.gridGap = "10px 10px";
-  // grid.style.margin = "25px";
-  // grid.style.justifyContent = "center";
+  grid.style.display = "grid";
+  grid.style.gridGap = "10px 10px";
+  grid.style.margin = "25px";
+  grid.style.justifyContent = "center";
 }
 
 // displays Boundary on HTML page
