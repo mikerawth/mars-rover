@@ -6,7 +6,7 @@ var rover1 = {
   x: 0,
   y: 0,
   travelLog: [],
-  display: "R1"
+  display: "R1",
 };
 
 var rover2 = {
@@ -17,9 +17,33 @@ var rover2 = {
   display: "R2"
 };
 
-var obsticle = {
+var obsticle1 = {
   x: 0,
   y: 1,
+  display: "X"
+};
+
+var obsticle2 = {
+  x: 3,
+  y: 2,
+  display: "X"
+};
+
+var obsticle3 = {
+  x: 4,
+  y: 6,
+  display: "X"
+};
+
+var obsticle4 = {
+  x: 2,
+  y: 7,
+  display: "X"
+};
+
+var obsticle5 = {
+  x: 9,
+  y: 8,
   display: "X"
 };
 
@@ -27,7 +51,11 @@ var xBoundary = 10;
 var yBoundary = 10;
 
 const boundary = createBoundary(xBoundary,yBoundary);
-addObsticleToBoundary([obsticle.x, obsticle.y]);
+addObsticleToBoundary(obsticle1);
+addObsticleToBoundary(obsticle2);
+addObsticleToBoundary(obsticle3);
+addObsticleToBoundary(obsticle4);
+addObsticleToBoundary(obsticle5);
 updatedPosition(rover1, roverPosition(rover1));
 updatedPosition(rover2, roverPosition(rover2));
 formBoundary();
@@ -143,7 +171,6 @@ function commandLine(rover, commands) {
         break;
     }
   }
-  console.log(`returning rover.travelLog here`);
   return rover.travelLog;
 }
 
@@ -172,8 +199,8 @@ function removePreviousPosition(location) {
   boundary[location[1]][location[0]] = "_";
 }
 
-function addObsticleToBoundary(location) {
-  boundary[location[1]][location[0]] = obsticle.display;
+function addObsticleToBoundary(obsticle) {
+  boundary[obsticle.y][obsticle.x] = obsticle.display;
 }
 
 // Rover checks spot ahead, makes sure it is in boundary
@@ -205,7 +232,7 @@ function preventCrash(rover) {
     || predictRoverY < 0 || predictRoverY >= yBoundary) {
     console.log(`Out of bounds.  Movement aborted`);
     return false;
-  } else if (predictRoverX === obsticle.x && predictRoverY === obsticle.y) {
+  } else if (boundary[predictRoverY][predictRoverX] !== "_") {
     console.log(`Obsticle in the way.  Movement aborted`);
     return false;
   } else {
@@ -238,10 +265,10 @@ function preventBackCrash(rover) {
       || predictRoverY < 0 || predictRoverY >= yBoundary) {
     console.log(`Out of bounds.  Movement aborted`);
     return false;
-  } else if (predictRoverX === obsticle.x && predictRoverY === obsticle.y) {
+  }  else if (boundary[predictRoverY][predictRoverX] !== "_") {
     console.log(`Obsticle in the way.  Movement aborted`);
     return false;
-  }  else {
+  } else {
     console.log(`In bounds.  Move out!`);
     return true;
   }
@@ -274,13 +301,8 @@ function formBoundary() {
     autoCount++;
   }
   // The autostring is telling the CSS how many columns to make
-    // The other CSS attributes were me learning how to implement CSS using Javascript
     // Biggest challenge was learning to use camelCase lettering for css attributes, instead of using the '-' as in a css file
   grid.style.gridTemplateColumns = autoString;
-  grid.style.display = "grid";
-  grid.style.gridGap = "10px 10px";
-  grid.style.margin = "25px";
-  grid.style.justifyContent = "center";
   displayBoundary();
 }
 
@@ -292,10 +314,4 @@ function displayBoundary() {
       grid.innerHTML += `<div class="grid-item">${boundary[i][j]}</div>`;
     }
   }
-}
-
-// DEBUGING FUNCTIONS
-function gridLength() {
-  console.log(`xBoundary is ${xBoundary}, and x-axis length is ${boundary[0].length}`);
-  console.log(`yBoundary is ${yBoundary}, and y-axis length is ${boundary.length}`);
 }

@@ -12,7 +12,12 @@
     <li>Open Console</li>
     <li>Type in <i>boundary</i> to see rover, marked as <i>'R'</i></li>
     <li>
-      Use <i>commandLine('string')</i>, using a string to control rover.
+      Use <i>commandLine(rover, 'string')</i>, using a string to control rover.
+      <ul>
+        <li>For rover, type in <i>rover1</i> to move R1</li>
+        <li>Type in <i>rover2</i> to move R2</li>
+        <li>Note that both rovers are facing North by default</li>
+      </ul>
       <ul>
         <li>Type <i>f</i> to move forward</li>
         <li>Type <i>b</i> to move backward</li>
@@ -21,7 +26,7 @@
         <aside>Example: <i>commandLine('rfrffrbblb')</i> is a valid string of commands</aside>
       </ul>
     </li>
-    <li>Once you move, you can type <i>boundary</i> again to see where the rover is</li>
+    <li>You will be able to see the rovers move on the grid below!</li>
   </ol>
 
   <div id="grid"></div>
