@@ -1,12 +1,20 @@
 // Rover Object Goes Here
 // ======================
 
-var rover = {
+var rover1 = {
   direction: "N",
   x: 0,
   y: 0,
   travelLog: [],
-  display: "R"
+  display: "R1"
+};
+
+var rover2 = {
+  direction: "N",
+  x: 9,
+  y: 9,
+  travelLog: [],
+  display: "R2"
 };
 
 var obsticle = {
@@ -20,13 +28,14 @@ var yBoundary = 10;
 
 const boundary = createBoundary(xBoundary,yBoundary);
 addObsticleToBoundary([obsticle.x, obsticle.y]);
-updatedPosition(roverPosition());
+updatedPosition(rover1, roverPosition(rover1));
+updatedPosition(rover2, roverPosition(rover2));
 formBoundary();
 
 // ======================
 
 // Turns rover left
-function turnLeft(){
+function turnLeft(rover){
   switch(rover.direction) {
     case "N":
       rover.direction = "W";
@@ -41,11 +50,11 @@ function turnLeft(){
         rover.direction = "N";
         break;                 
   }
-  return console.log(`Rover has turned left.  Now facing: ${rover.direction}`);
+  console.log(`Rover has turned left.  Now facing: ${rover.direction}`);
 }
 
 // Turns rover right
-function turnRight(){
+function turnRight(rover){
   switch(rover.direction) {
     case "N":
       rover.direction = "E";
@@ -60,15 +69,15 @@ function turnRight(){
       rover.direction = "N";
       break;                 
   }
-  return console.log(`Rover has turned right.  Now facing: ${rover.direction}`);
+  console.log(`Rover has turned right.  Now facing: ${rover.direction}`);
 }
 
 
 // Rover moves forward
-// preventCrash() is called with this function before move is initiated.
-function moveForward(){
-  if (preventCrash() == true) {
-    removePreviousPosition(roverPosition());
+// preventCrash(rover) is called with this function before move is initiated.
+function moveForward(rover){
+  if (preventCrash(rover) == true) {
+    removePreviousPosition(roverPosition(rover));
     switch(rover.direction) {
       case "N":
         rover.y--;
@@ -83,16 +92,16 @@ function moveForward(){
         rover.x--;
         break;
     }
-    updatedPosition(roverPosition());
-    return console.log(`Rover moving forward, heading ${rover.direction}. Now at position ${roverPosition()}`);
+    updatedPosition(rover, roverPosition(rover));
+    console.log(`Rover moving forward, heading ${rover.direction}. Now at position ${roverPosition(rover)}`);
   }
 }
 
 // Rover moves backwards
-// preventBackCrash() is called with this function before move is initiated.
-function moveBackward(){
-  if (preventBackCrash() == true) {
-    removePreviousPosition(roverPosition());
+// preventBackCrash(rover) is called with this function before move is initiated.
+function moveBackward(rover){
+  if (preventBackCrash(rover) == true) {
+    removePreviousPosition(roverPosition(rover));
     switch(rover.direction) {
       case "N":
         rover.y++;
@@ -107,53 +116,54 @@ function moveBackward(){
         rover.x++;
         break;
     }
-    updatedPosition(roverPosition());
-    return console.log(`Looking ${rover.direction}, rover doing a 'Michael Jackson', now at position ${roverPosition()}`);
+    updatedPosition(rover, roverPosition(rover));
+    console.log(`Looking ${rover.direction}, rover doing a 'Michael Jackson', now at position ${roverPosition(rover)}`);
   }
 }
 
 // commandLine accepts a string, using each letter as a command.
 // "f", "b", "l", and "r" will call other rover functions respectivly.
-function commandLine(commands) {
+function commandLine(rover, commands) {
   for(let i = 0; i < commands.length; i++) {
     switch(commands.charAt(i).toLowerCase()) {
       case "f":
-        moveForward();
+        moveForward(rover);
         break;
       case "b":
-        moveBackward();
+        moveBackward(rover);
         break;
       case "r":
-        turnRight();
+        turnRight(rover);
         break;
       case "l":
-        turnLeft();
+        turnLeft(rover);
         break;
       default:
         console.log(`${commands.charAt(i)} is not a valid command`)
         break;
     }
   }
+  console.log(`returning rover.travelLog here`);
   return rover.travelLog;
 }
 
 // Returns rover cordinates
-function roverPosition() {
+function roverPosition(rover) {
   return [rover.x, rover.y];
 }
 
-function obsticlePostion() {
-  return [obsticle.x, obsticle.y];
-}
+// function obsticlePostion() {
+//   return [obsticle.x, obsticle.y];
+// }
 
 // function updates position in Boundary.
 // location is an array with length of 2
-function updatedPosition(location) {
+function updatedPosition(rover, location) {
   // location[1] is y-axis
   // lcoation[0] is x-axis
   // due to method of boundary created, boundary reads y-axis first, and x-axis second.
   boundary[location[1]][location[0]] = rover.display;
-  rover.travelLog.push(roverPosition());
+  rover.travelLog.push(roverPosition(rover));
   displayBoundary();
 }
 
@@ -163,13 +173,13 @@ function removePreviousPosition(location) {
 }
 
 function addObsticleToBoundary(location) {
-  console.log(location[1]);
-  console.log(location[0]);
   boundary[location[1]][location[0]] = obsticle.display;
 }
 
 // Rover checks spot ahead, makes sure it is in boundary
-function preventCrash() {
+function preventCrash(rover) {
+  // console.log(rover.x);
+  // console.log(rover.y);
   // Getting 'predicted' coordinates if Rover moves forward.
   var predictRoverX = rover.x;
   var predictRoverY = rover.y;
@@ -189,7 +199,8 @@ function preventCrash() {
   }
   // Now have the predictedLocatoin of Rover
   // Any spot that is 'undefined' works with y-axis in regards to Boundary.
-  console.log([predictRoverX, predictRoverY]);
+  // console.log([predictRoverX, predictRoverY]);
+  // console.log(boundary[predictRoverY][predictRoverX]);
   if (predictRoverX < 0 || predictRoverX >= xBoundary 
     || predictRoverY < 0 || predictRoverY >= yBoundary) {
     console.log(`Out of bounds.  Movement aborted`);
@@ -204,8 +215,8 @@ function preventCrash() {
 }
 
 // Rover checks spot behind, makes sure it is in boundary.
-// Same as preventCrash(), but directions are reversed.
-function preventBackCrash() {
+// Same as preventCrash(rover), but directions are reversed.
+function preventBackCrash(rover) {
   var predictRoverX = rover.x;
   var predictRoverY = rover.y;
   switch(rover.direction) {
